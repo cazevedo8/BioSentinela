@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horta Sentinela — Versão 1.1 · Registro do Projeto de Inovação</title>
+<style>
+:root{
+  --green-950:#03150c;
+  --green-900:#071f13;
+  --green-800:#0d2b1d;
+  --green-700:#123a27;
+  --green-600:#1a5136;
+  --green-500:#236646;
+  --green-400:#3a8a5e;
+  --green-300:#6fbf92;
+  --green-200:#a5dfc0;
+  --green-100:#d8f6e6;
+  --lime:#8ee08a;
+  --amber:#f2c14e;
+  --red:#e2725b;
+  --ink:#eafff1;
+  --ink-dim:#9ec9b1;
+  --card:#0d2b1d;
+  --card-2:#103423;
+  --border:rgba(165,223,192,.14);
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --radius:14px;
+  --font:"Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --mono:"Cascadia Code","SF Mono",Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--green-950);
+  color:var(--ink);
+  font-family:var(--font);
+  line-height:1.55;
+  min-height:100vh;
+}
+::selection{background:var(--green-400);color:#03150c;}
+
+/* ========== TOPBAR ========== */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;gap:14px;
+  padding:10px 20px;
+  background:rgba(3,21,12,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.topbar .logo{display:flex;align-items:center;gap:12px;min-width:0;}
+.topbar svg{flex:0 0 auto;}
+.topbar h1{font-size:1.02rem;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.topbar h1 small{display:block;font-size:.68rem;color:var(--ink-dim);font-weight:400;letter-spacing:.08em;text-transform:uppercase;}
+.spacer{flex:1;}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  color:#03150c;background:linear-gradient(135deg,var(--lime),#57c785);
+  padding:6px 14px;border-radius:999px;font-weight:700;white-space:nowrap;
+  box-shadow:0 0 18px rgba(142,224,138,.35);
+}
+.btn{
+  font-family:var(--font);font-size:.8rem;color:var(--ink);
+  background:var(--green-700);border:1px solid var(--border);
+  padding:8px 14px;border-radius:10px;cursor:pointer;transition:.2s;white-space:nowrap;
+  position:relative;overflow:hidden;
+}
+.btn:hover{background:var(--green-600);border-color:var(--green-300);}
+.btn.danger{background:transparent;border-color:rgba(226,114,91,.4);color:#f0a695;}
+.btn.danger:hover{background:rgba(226,114,91,.15);}
+/* estado de confirmação do reset */
+.btn.danger.arming{
+  border-color:var(--amber);color:#1a1206;
+  background:linear-gradient(90deg,var(--amber) 0%,var(--amber) var(--arm,0%),rgba(242,193,78,.18) var(--arm,0%));
+  font-weight:800;
+}
+.btn.danger.arming::after{content:"";position:absolute;left:0;bottom:0;height:2px;background:#1a1206;width:var(--arm,0%);transition:width .1s linear;}
+
+/* ========== LAYOUT ========== */
+.layout{display:flex;align-items:flex-start;}
+.sidebar{
+  position:sticky;top:57px;align-self:flex-start;
+  width:280px;flex:0 0 280px;
+  height:calc(100vh - 57px);overflow-y:auto;
+  border-right:1px solid var(--border);
+  padding:18px 12px 40px;
+  background:var(--green-900);
+}
+.sidebar::-webkit-scrollbar{width:8px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--green-700);border-radius:8px;}
+.nav-label{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);padding:12px 12px 6px;}
+.nav a{
+  display:flex;align-items:center;gap:10px;text-decoration:none;
+  color:var(--ink-dim);font-size:.85rem;
+  padding:7px 12px;border-radius:8px;border-left:2px solid transparent;transition:.15s;
+}
+.nav a:hover{color:var(--ink);background:var(--green-800);}
+.nav a.active{color:var(--lime);background:var(--card-2);border-left-color:var(--lime);}
+.nav .n{font-family:var(--mono);font-size:.7rem;color:var(--green-300);width:22px;flex:0 0 22px;}
+.nav a.active .n{color:var(--lime);}
+
+.content{flex:1;min-width:0;padding:28px clamp(18px,4vw,48px) 80px;max-width:1160px;}
+
+/* ========== HERO / VISÃO GERAL ========== */
+.hero{
+  position:relative;overflow:hidden;
+  border:1px solid var(--border);border-radius:var(--radius);
+  background:
+    radial-gradient(600px 300px at 85% -10%, rgba(142,224,138,.22), transparent 60%),
+    radial-gradient(500px 260px at -10% 120%, rgba(242,193,78,.12), transparent 55%),
+    linear-gradient(160deg, var(--card-2), var(--green-900));
+  padding:30px 30px 26px;box-shadow:var(--shadow);
+}
+.kicker{font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green-300);}
+.hero h2{font-size:clamp(1.7rem,3.4vw,2.5rem);line-height:1.15;margin:10px 0 6px;}
+.hero h2 em{font-style:normal;color:var(--lime);}
+.tagline{font-size:1.05rem;color:var(--green-100);max-width:62ch;}
+.narrative{
+  margin-top:16px;padding:12px 14px;border-left:3px solid var(--lime);
+  background:rgba(142,224,138,.06);border-radius:8px;color:var(--green-100);font-size:.92rem;max-width:78ch;
+}
+.chiprow{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.chip{font-size:.72rem;border:1px solid var(--border);color:var(--green-200);border-radius:999px;padding:4px 12px;background:rgba(255,255,255,.02);}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:20px;}
+.meta-card{background:var(--green-800);border:1px solid var(--border);border-radius:12px;padding:12px 14px;}
+.meta-card label{display:block;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:4px;}
+.meta-card input{
+  width:100%;background:transparent;border:none;border-bottom:1px dashed var(--green-500);
+  color:var(--ink);font-size:.9rem;padding:4px 2px;font-family:var(--font);
+  color-scheme:dark;
+}
+.meta-card input:focus{outline:none;border-bottom-color:var(--lime);}
+
+/* stats */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:18px;}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+.stat .num{font-size:2rem;font-weight:800;color:var(--lime);font-family:var(--mono);}
+.stat .lbl{font-size:.8rem;color:var(--ink-dim);}
+.stat .sub{font-family:var(--mono);font-size:.68rem;color:var(--green-300);margin-top:6px;}
+.progress{height:8px;border-radius:99px;background:var(--green-800);overflow:hidden;margin-top:8px;}
+.progress > div{height:100%;background:linear-gradient(90deg,var(--green-400),var(--lime));width:0%;transition:width .4s;}
+.stat.countdown{background:linear-gradient(160deg,var(--green-800),var(--card-2));border-color:rgba(142,224,138,.3);}
+.stat.countdown .num{color:var(--amber);}
+
+/* ========== SECTION CARDS ========== */
+section.block{
+  margin-top:26px;border:1px solid var(--border);border-radius:var(--radius);
+  background:var(--card);box-shadow:var(--shadow);overflow:hidden;
+  scroll-margin-top:74px;
+}
+.block-head{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  background:linear-gradient(90deg, rgba(142,224,138,.06), transparent 55%);
+}
+.secnum{
+  font-family:var(--mono);font-size:.75rem;color:#03150c;font-weight:800;
+  background:var(--green-300);width:34px;height:34px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;flex:0 0 34px;
+}
+.block-head h3{font-size:1.08rem;flex:1;min-width:0;}
+.block-head small{display:block;font-size:.72rem;color:var(--ink-dim);font-weight:400;}
+.status{
+  cursor:pointer;user-select:none;font-size:.7rem;font-weight:700;letter-spacing:.06em;
+  border-radius:999px;padding:6px 12px;border:1px solid transparent;white-space:nowrap;transition:.2s;
+}
+.status[data-state="0"]{color:#f4b8ac;border-color:rgba(226,114,91,.45);background:rgba(226,114,91,.12);}
+.status[data-state="1"]{color:#f8e2a1;border-color:rgba(242,193,78,.45);background:rgba(242,193,78,.12);}
+.status[data-state="2"]{color:#a8f0b8;border-color:rgba(142,224,138,.45);background:rgba(142,224,138,.12);}
+.block-body{padding:18px 20px;}
+.block-body p{margin:8px 0;color:var(--green-100);}
+.quote{
+  border-left:3px solid var(--green-400);padding:12px 14px;border-radius:8px;
+  background:rgba(255,255,255,.025);font-style:italic;color:var(--green-100);margin:10px 0;
+}
+h4.sub{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green-300);margin:16px 0 8px;border-bottom:1px dashed var(--border);padding-bottom:6px;}
+
+/* lists */
+ul.clean{list-style:none;margin:8px 0;}
+ul.clean li{position:relative;padding:4px 0 4px 22px;color:var(--green-100);}
+ul.clean li::before{content:"▸";position:absolute;left:4px;color:var(--lime);}
+
+/* checklists */
+.checklist{background:var(--green-800);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin:10px 0;}
+.checklist-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}
+.checklist-top span.count{font-family:var(--mono);font-size:.75rem;color:var(--lime);}
+.chk{display:flex;align-items:flex-start;gap:10px;padding:6px 4px;border-radius:8px;cursor:pointer;}
+.chk:hover{background:rgba(255,255,255,.03);}
+.chk input{margin-top:3px;accent-color:var(--lime);width:16px;height:16px;cursor:pointer;}
+.chk span.txt{color:var(--green-100);font-size:.92rem;}
+.chk input:checked + span.txt{color:var(--ink-dim);text-decoration:line-through;text-decoration-color:var(--green-400);}
+
+/* tables */
+.table-wrap{overflow-x:auto;margin:10px 0;border-radius:12px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:640px;}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+thead th{background:var(--green-800);color:var(--green-200);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;}
+tbody tr:nth-child(even){background:rgba(255,255,255,.02);}
+tbody tr:hover{background:rgba(142,224,138,.05);}
+.tag{display:inline-block;font-size:.66rem;font-family:var(--mono);padding:2px 8px;border-radius:6px;background:var(--green-700);color:var(--green-200);}
+.tag.warn{background:rgba(242,193,78,.15);color:var(--amber);}
+.tag.ok{background:rgba(142,224,138,.12);color:var(--lime);}
+.tag.line-a{background:rgba(142,224,138,.12);color:var(--lime);}
+.tag.line-b{background:rgba(242,193,78,.15);color:var(--amber);}
+
+/* pillars */
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px;}
+.pillar{border:1px solid var(--border);border-radius:12px;padding:14px;background:var(--card-2);}
+.pillar .pnum{font-family:var(--mono);color:var(--lime);font-size:.7rem;letter-spacing:.15em;}
+.pillar h4{font-size:.98rem;margin:6px 0;color:#fff;}
+.pillar p{font-size:.85rem;color:var(--green-100);}
+
+/* svg diagram */
+.diagram{background:var(--green-800);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0;overflow-x:auto;}
+.diagram svg{display:block;min-width:680px;width:100%;height:auto;}
+.diagram figcaption{font-size:.75rem;color:var(--ink-dim);margin-top:10px;text-align:center;font-family:var(--mono);}
+
+/* metrics inputs */
+.metric-input{
+  width:90px;background:var(--green-800);border:1px solid var(--border);border-radius:8px;
+  color:var(--lime);font-family:var(--mono);padding:6px 8px;text-align:center;
+}
+.metric-input:focus{outline:none;border-color:var(--lime);}
+
+/* decisions log */
+.log-controls{display:flex;gap:10px;margin:10px 0;}
+.log-controls input[type=text]{
+  flex:1;background:var(--green-800);border:1px solid var(--border);border-radius:10px;
+  color:var(--ink);padding:12px 14px;font-size:.92rem;font-family:var(--font);min-width:0;
+}
+.log-controls input[type=text]:focus{outline:none;border-color:var(--lime);}
+.log-controls button{
+  background:var(--lime);color:#03150c;border:none;border-radius:10px;
+  padding:0 22px;font-weight:800;cursor:pointer;font-size:.9rem;
+}
+.log-controls button:hover{filter:brightness(1.1);}
+.log-list{list-style:none;margin-top:6px;}
+.log-item{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--green-800);border:1px solid var(--border);
+  border-radius:12px;padding:10px 12px;margin:8px 0;
+}
+.log-item time{font-family:var(--mono);font-size:.72rem;color:var(--ink-dim);white-space:nowrap;padding-top:2px;}
+.log-item .txt{flex:1;color:var(--green-100);font-size:.9rem;}
+.log-item button{background:transparent;border:none;color:var(--red);cursor:pointer;font-size:1rem;padding:0 4px;}
+.log-empty{color:var(--ink-dim);font-size:.85rem;font-style:italic;padding:10px 2px;}
+.history{border:1px dashed var(--border);border-radius:12px;padding:12px 14px;margin-bottom:12px;background:rgba(255,255,255,.02);}
+.history h5{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green-300);margin:10px 0 6px;}
+.history h5:first-child{margin-top:0;}
+.history ul{list-style:none;}
+.history li{position:relative;padding:2px 0 2px 20px;font-size:.86rem;color:var(--green-100);}
+.history li::before{content:"▸";position:absolute;left:2px;color:var(--amber);}
+
+/* footer */
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--border);color:var(--ink-dim);font-size:.78rem;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+
+/* toast */
+.toast{
+  position:fixed;bottom:22px;right:22px;z-index:99;
+  background:var(--green-700);border:1px solid var(--green-400);color:var(--ink);
+  padding:10px 18px;border-radius:10px;font-size:.85rem;
+  opacity:0;pointer-events:none;transform:translateY(8px);transition:.25s;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px){
+  .layout{flex-direction:column;}
+  .sidebar{position:static;width:100%;height:auto;max-height:none;flex:none;border-right:none;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;gap:4px;padding:10px;}
+  .nav{display:flex;gap:4px;}
+  .nav-label{display:none;}
+  .nav a{white-space:nowrap;font-size:.78rem;}
+  .nav .n{width:auto;}
+  .topbar h1{font-size:.85rem;}
+  .topbar h1 small{display:none;}
+  .badge{font-size:.6rem;padding:5px 10px;}
+  .btn{padding:7px 10px;font-size:.72rem;}
+}
+
+/* ========== PRINT ========== */
+@media print{
+  body{background:#fff;color:#111;}
+  .topbar,.sidebar,.status,.log-controls,.foot .btn{display:none !important;}
+  .content{padding:0;max-width:none;}
+  .hero,.block,.stat,.pillar,.checklist,.meta-card,.diagram,.history{background:#fff !important;color:#111 !important;border:1px solid #ddd !important;box-shadow:none !important;}
+  .block-body p,.chk span.txt,ul.clean li,.hero h2,.tagline,.narrative{color:#111 !important;}
+  .secnum{background:#eee !important;color:#111 !important;}
+  section.block{page-break-inside:avoid;margin-top:12px;}
+  .table-wrap{border:1px solid #ddd;}
+  thead th{background:#f3f3f3 !important;color:#111 !important;}
+  th,td{border-bottom:1px solid #ddd;}
+  .metric-input{color:#111;background:#fff;border:1px solid #ddd;}
+  .diagram svg text{fill:#111 !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TOPBAR ============ -->
+<header class="topbar">
+  <div class="logo">
+    <svg width="38" height="38" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <circle cx="24" cy="24" r="22" stroke="#6fbf92" stroke-width="2.4"/>
+      <path d="M24 38c0-8.5 0-13.5 0-19" stroke="#8ee08a" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M24 21c-6 0-10-4.2-10-10 6.2 0 10 3.8 10 10Z" fill="#3a8a5e" stroke="#a5dfc0" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M24 17c5 0 8.6-3.3 8.6-8.2C27.6 8.8 24 12 24 17Z" fill="#236646" stroke="#a5dfc0" stroke-width="1.4" stroke-linejoin="round"/>
+      <rect x="15" y="34.5" width="18" height="4.6" rx="2.3" fill="#123a27" stroke="#6fbf92" stroke-width="1.3"/>
+    </svg>
+    <h1>Horta Sentinela<small>Registro do Projeto de Inovação · FIRST LEGO League</small></h1>
+  </div>
+  <div class="spacer"></div>
+  <span class="badge" title="Versão do registro">● Versão 1.1 · 04/11/2026</span>
+  <button class="btn" id="btnPrint" title="Imprimir / salvar PDF">🖨 Imprimir</button>
+  <button class="btn danger" id="btnReset" title="Apagar todo o progresso salvo neste navegador (duas etapas de confirmação)">↺ Resetar</button>
+</header>
+
+<div class="layout">
+
+<!-- ============ SIDEBAR ============ -->
+<nav class="sidebar" aria-label="Navegação do registro">
+  <div class="nav-label">Navegação</div>
+  <div class="nav" id="navList">
+    <a href="#visao-geral" class="active"><span class="n">00</span>Visão Geral</a>
+    <a href="#sec1"><span class="n">01</span>Declaração do Problema</a>
+    <a href="#sec2"><span class="n">02</span>Visão Geral da Solução</a>
+    <a href="#sec3"><span class="n">03</span>Arquitetura dos Monitoramentos</a>
+    <a href="#sec4"><span class="n">04</span>Recursos Hídricos e Módulos Verticais</a>
+    <a href="#sec5"><span class="n">05</span>Protótipo e Eletrônica</a>
+    <a href="#sec6"><span class="n">06</span>Parede Bionativa</a>
+    <a href="#sec7"><span class="n">07</span>Viés Comunitário</a>
+    <a href="#sec8"><span class="n">08</span>Métricas de Impacto</a>
+    <a href="#sec9"><span class="n">09</span>Alinhamento com a Rubrica</a>
+    <a href="#sec10"><span class="n">10</span>Roteiro de Pesquisa</a>
+    <a href="#sec11"><span class="n">11</span>Riscos e Mitigações</a>
+    <a href="#sec12"><span class="n">12</span>Próximos Passos</a>
+    <a href="#registro"><span class="n">✎</span>Registro de Alterações</a>
+  </div>
+</nav>
+
+<!-- ============ CONTEÚDO ============ -->
+<main class="content">
+
+<!-- ===== 00 · VISÃO GERAL ===== -->
+<section class="hero" id="visao-geral">
+  <div class="kicker">Projeto de Inovação · FIRST LEGO League Challenge · Temporada BIOGLOW™</div>
+  <h2><em>Horta Sentinela</em><br>Corredores Vivos de Biodiversidade Escolar</h2>
+  <p class="tagline">“A escola produz alimento e vida — e vigia a biodiversidade que retorna.”</p>
+
+  <div class="narrative"><strong>Narrativa BIOGLOW™:</strong> se o BIOGLOW celebra a “luz” da floresta, a nossa horta é a “luz” que reacende a biodiversidade no ambiente urbano — conectando o chão (horta vertical), o sub-bosque (plantas de base) e o dossel (trepadeira da parede bionativa) em um corredor vivo dentro da escola.</div>
+
+  <div class="chiprow" aria-label="Marcadores">
+    <span class="chip">🌿 Biodiversidade urbana</span>
+    <span class="chip">💧 Reuso de água</span>
+    <span class="chip">🧱 Horta vertical</span>
+    <span class="chip">📡 Monitoramento</span>
+    <span class="chip">🤝 Impacto comunitário</span>
+    <span class="chip">🎓 STEAM</span>
+  </div>
+
+  <div class="meta-grid">
+    <div class="meta-card"><label for="m-equipe">Equipe</label><input id="m-equipe" data-meta="equipe" placeholder="Nome da equipe…" autocomplete="off"></div>
+    <div class="meta-card"><label for="m-mentor">Mentor / Especialista</label><input id="m-mentor" data-meta="mentor" placeholder="ex.: biólogo, técnico agrícola…" autocomplete="off"></div>
+    <div class="meta-card"><label for="m-tema">Tema da temporada</label><input id="m-tema" data-meta="tema" value="BIOGLOW™ / FIRST CANOPY™" autocomplete="off"></div>
+    <div class="meta-card"><label for="m-evento">Nome do evento</label><input id="m-evento" data-meta="evento" placeholder="ex.: Estadual FLL 2026…" autocomplete="off"></div>
+    <div class="meta-card"><label for="m-eventoData">Data do evento</label><input id="m-eventoData" data-meta="eventoData" type="date" aria-describedby="lblCountdown"></div>
+  </div>
+
+  <div class="stat-grid" aria-label="Progresso e contagem regressiva">
+    <div class="stat">
+      <div class="num" id="statSections">0/12</div>
+      <div class="lbl">Seções com status “Concluído”</div>
+      <div class="progress"><div id="barSections"></div></div>
+    </div>
+    <div class="stat">
+      <div class="num" id="statTasks">0/0</div>
+      <div class="lbl">Tarefas marcadas na seção 12</div>
+      <div class="progress"><div id="barTasks"></div></div>
+    </div>
+    <div class="stat countdown">
+      <div class="num" id="statCountdown">—</div>
+      <div class="lbl" id="lblCountdown">Defina a data do evento</div>
+      <div class="sub" id="subCountdown">Data do evento: —</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 00b · HISTÓRICO DE EVOLUÇÃO ===== -->
+<section class="block" id="mudancas">
+  <div class="block-head">
+    <div class="secnum">V</div>
+    <h3>Histórico de Evolução<small>V1 → V1.1</small></h3>
+  </div>
+  <div class="block-body">
+    <h4 class="sub">V1.1 — 04/11/2026</h4>
+    <ul class="clean">
+      <li><strong>SPIKE Prime removido</strong> — a plataforma única passa a ser <strong>eletrônica com Arduino/ESP32</strong> (ESP32 no controle hídrico, sensores e painel; sem kits LEGO no projeto de inovação).</li>
+      <li><strong>Horta em módulos verticais</strong> — torres/painéis com vasos reciclados; mais produção por m² em área escolar urbana.</li>
+      <li><strong>Nova seção 04 — Recursos Hídricos</strong>: captação de água de chuva, <strong>circuito fechado com recirculação filtrada</strong> e <strong>Linha B de reuso</strong> (enxágue de vegetais, sem produtos químicos) exclusiva para a parede bionativa. As duas linhas nunca se misturam.</li>
+      <li><strong>Contador de dias até o evento</strong> ao lado dos quadros de status (seções concluídas e tarefas), alimentado pela “Data do evento”.</li>
+      <li><strong>Resetar em duas etapas</strong> — o botão pede confirmação explícita antes de apagar o progresso salvo.</li>
+      <li>Métricas, riscos, pesquisa e checklist atualizados para incluir <strong>recursos hídricos</strong>.</li>
+    </ul>
+
+    <h4 class="sub">V1 — 04/11/2026</h4>
+    <ul class="clean">
+      <li>O “jardim nativo” virou <strong>horta funcional</strong> com produção real de alimento.</li>
+      <li>Entrada de <strong>irrigação automatizada</strong> — eficiência hídrica como diferencial técnico e sustentável.</li>
+      <li>Entrada da <strong>rede de monitoramentos integrados</strong> (solo, chuva, clima, luz, fauna) como sistema “Sentinela”.</li>
+      <li>Entrada da <strong>parede bionativa</strong> — estratificação da floresta em miniatura no muro da escola.</li>
+      <li><strong>Viés comunitário</strong> mantido e reforçado: produção compartilhada, doação, ciência cidadã, mapa de corredores.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 01 · DECLARAÇÃO DO PROBLEMA ===== -->
+<section class="block" id="sec1" data-section>
+  <div class="block-head">
+    <div class="secnum">01</div>
+    <h3>Declaração do Problema<small>Por que existe · por que importa · quem é afetado</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <div class="quote">Escolas urbanas têm áreas ociosas ou subaproveitadas. Hortas escolares manuais tendem ao abandono por falta de água eficiente, manutenção e engajamento. Enquanto isso, a biodiversidade local (polinizadores, aves, insetos) está em declínio, famílias do bairro têm pouco acesso a alimentos frescos e espaços de natureza, e a comunidade escolar não tem papel ativo na conservação. <strong>Falta uma solução integrada que una produção de alimentos em espaço vertical, manejo eficiente e reúso de água e o retorno da biodiversidade nativa — com custo baixo e gestão comunitária.</strong></div>
+    <p>Os juízes gostam de ver explicitados: <strong>por que o problema existe</strong>, <strong>por que é importante resolvê-lo</strong> e <strong>quem é afetado</strong>. Afetados: escola, famílias do bairro, fauna urbana (polinizadores e aves) e o próprio bairro (microclima, água e bem-estar).</p>
+  </div>
+</section>
+
+<!-- ===== 02 · VISÃO GERAL DA SOLUÇÃO ===== -->
+<section class="block" id="sec2" data-section>
+  <div class="block-head">
+    <div class="secnum">02</div>
+    <h3>Visão Geral da Solução<small>3 pilares + 1 hub central “Sentinela”</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pnum">PILAR 1</div>
+        <h4>Horta vertical com irrigação automatizada</h4>
+        <p>Módulos verticais (torres/painéis de PET ou pallet) de hortaliças folhosas. Sensor de umidade do solo irriga <strong>só quando necessário</strong>; sensor de chuva bloqueia em dias chuvosos; <strong>circuito fechado reutiliza a água drenada</strong>; registro de <strong>litros economizados/reutilizados</strong> por semana.</p>
+      </div>
+      <div class="pillar">
+        <div class="pnum">PILAR 2</div>
+        <h4>Rede de monitoramentos integrados (“Sentinela”)</h4>
+        <p>Umidade do solo, temperatura/umidade do ar, luminosidade, chuva, <strong>nível do reservatório</strong> e <strong>contagem de visitas da fauna</strong>. Dados consolidados em painel (cartaz ou página servida pelo próprio ESP32 na rede escolar). Regra: irrigar somente se <em>solo seco</em> <strong>e</strong> <em>sem chuva recente</em> <strong>e</strong> <em>reservatório com água</em>.</p>
+      </div>
+      <div class="pillar">
+        <div class="pnum">PILAR 3</div>
+        <h4>Parede bionativa (regada por reúso)</h4>
+        <p>Jardim vertical no muro/cerca com <strong>exclusivamente espécies nativas</strong>: herbáceas embaixo, arbustos no meio, trepadeiras no alto. <strong>Alimentada pela Linha B de reuso de água</strong> (enxágue de vegetais, sem produtos químicos) — fecha o ciclo hídrico do projeto. Refúgio para <strong>abelhas nativas sem ferrão</strong> (ex.: jataí) e beija-flores. QR codes = trilha educativa.</p>
+      </div>
+      <div class="pillar">
+        <div class="pnum">HUB</div>
+        <h4>Sistema Sentinela (ESP32)</h4>
+        <p>Coração do projeto: um <strong>ESP32 com Wi-Fi</strong> lê os sensores, controla a bomba e o desvio Linha A/Linha B e gera os <strong>relatórios quinzenais</strong> (água captada/reutilizada, visitas de fauna, saúde do solo). Painel acessível pelo celular dos alunos via rede escolar — ou mostrado em um display físico. O humano continua no controle: a comunidade decide plantio, colheita e parede.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 03 · ARQUITETURA DOS MONITORAMENTOS ===== -->
+<section class="block" id="sec3" data-section>
+  <div class="block-head">
+    <div class="secnum">03</div>
+    <h3>Arquitetura dos Monitoramentos<small>Componente · dado gerado · ação/aprendizado</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Monitoramento</th><th>Componente sugerido</th><th>Dado gerado</th><th>Ação / Aprendizado</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Umidade do solo</td><td>Sensor capacitivo de umidade (×2, base e topo das torres)</td><td>% de umidade por andar/canteiro</td><td>Irrigação automática; alerta de solo seco</td></tr>
+          <tr><td>2</td><td>Chuva</td><td>Sensor de chuva</td><td>Ocorrência / mm</td><td>Cancela irrigação da Linha A; alimenta reservatório</td></tr>
+          <tr><td>3</td><td>Nível do reservatório</td><td>Sensor ultrassônico de distância (tank level)</td><td>Litros estimados disponíveis</td><td>Bloqueia bomba se vazio; alerta de reposição/chuva</td></tr>
+          <tr><td>4</td><td>Clima</td><td>Sensor de temperatura e umidade do ar (DHT22 ou similar)</td><td>Microclima local</td><td>Decisão de irrigação; proteção no calor extremo</td></tr>
+          <tr><td>5</td><td>Luminosidade</td><td>Sensor de luz (LDR ou BH1750)</td><td>Horas de sol/dia</td><td>Distribuição de culturas; orientação da parede bionativa</td></tr>
+          <tr><td>6</td><td>Fauna</td><td>Sensor ultrassônico ou câmera simples no “alimentador”</td><td>Nº de visitas de animais</td><td>Diário de biodiversidade; indicador de saúde ecológica</td></tr>
+          <tr><td>7</td><td><span class="tag warn">OPCIONAL</span> Solo / Solução</td><td>Kit de pH / CE (condutividade) simples</td><td>pH e concentração de nutrientes</td><td>Adubação orgânica ou ajuste da solução nutritiva</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 04 · RECURSOS HÍDRICOS E MÓDULOS VERTICAIS ===== -->
+<section class="block" id="sec4" data-section>
+  <div class="block-head">
+    <div class="secnum">04</div>
+    <h3>Recursos Hídricos e Módulos Verticais<small>Captação de chuva · circuito fechado · reúso de água · duas linhas separadas</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <p>A horta passa a ser <strong>vertical</strong> — torres/painéis de vasos reciclados (PET ou pallet), de 3 a 6 andares, priorizando folhosas — porque o projeto foi desenhado em torno do <strong>reúso de água</strong>: a mesma água circula, é filtrada e retorna, enquanto a água de reuso da cozinha irriga exclusivamente a parede bionativa.</p>
+
+    <h4 class="sub">Desenho do ciclo da água</h4>
+    <figure class="diagram" aria-label="Diagrama do ciclo de água do projeto">
+      <svg viewBox="0 0 780 350" role="img" aria-labelledby="svgTitle">
+        <title id="svgTitle">Ciclo hídrico do Horta Sentinela: captação de chuva para a horta e reúso de água para a parede bionativa</title>
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#8ee08a"/>
+          </marker>
+          <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#f2c14e"/>
+          </marker>
+        </defs>
+
+        <!-- Linha A -->
+        <text x="12" y="18" fill="#a5dfc0" font-size="11" font-family="Cascadia Code, monospace" letter-spacing="2">LINHA A · ÁGUA DE CHUVA / POTÁVEL → HORTALIÇAS</text>
+        <rect x="12" y="28" width="128" height="52" rx="10" fill="#123a27" stroke="#6fbf92" stroke-width="1.6"/>
+        <text x="76" y="50" text-anchor="middle" fill="#d8f6e6" font-size="12.5" font-weight="700">Telhado + calha</text>
+        <text x="76" y="67" text-anchor="middle" fill="#9ec9b1" font-size="10">captação de chuva</text>
+
+        <line x1="140" y1="54" x2="172" y2="54" stroke="#8ee08a" stroke-width="2" marker-end="url(#arrow)"/>
+        <rect x="174" y="28" width="150" height="52" rx="10" fill="#123a27" stroke="#6fbf92" stroke-width="1.6"/>
+        <text x="249" y="50" text-anchor="middle" fill="#d8f6e6" font-size="12.5" font-weight="700">Reservatório</text>
+        <text x="249" y="67" text-anchor="middle" fill="#9ec9b1" font-size="10">tela + filtro de sólidos</text>
+
+        <line x1="324" y1="54" x2="356" y2="54" stroke="#8ee08a" stroke-width="2" marker-end="url(#arrow)"/>
+        <rect x="358" y="28" width="128" height="52" rx="10" fill="#123a27" stroke="#6fbf92" stroke-width="1.6"/>
+        <text x="422" y="50" text-anchor="middle" fill="#d8f6e6" font-size="12.5" font-weight="700">ESP32 + bomba</text>
+        <text x="422" y="67" text-anchor="middle" fill="#9ec9b1" font-size="10">relé · válvula · sensores</text>
+
+        <line x1="486" y1="54" x2="518" y2="54" stroke="#8ee08a" stroke-width="2" marker-end="url(#arrow)"/>
+        <rect x="520" y="28" width="246" height="52" rx="10" fill="#0d2b1d" stroke="#8ee08a" stroke-width="2"/>
+        <text x="643" y="50" text-anchor="middle" fill="#eafff1" font-size="12.5" font-weight="800">TORRES VERTICAIS</text>
+        <text x="643" y="67" text-anchor="middle" fill="#a5dfc0" font-size="10">gotejo por andar · 3–6 níveis</text>
+
+        <!-- Recirculação -->
+        <path d="M620 80 V108" fill="none" stroke="#8ee08a" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+        <rect x="430" y="108" width="212" height="46" rx="10" fill="#0d2b1d" stroke="#6fbf92" stroke-width="1.4" stroke-dasharray="3 3"/>
+        <text x="536" y="127" text-anchor="middle" fill="#d8f6e6" font-size="11.5" font-weight="700">Retorno com filtro</text>
+        <text x="536" y="143" text-anchor="middle" fill="#9ec9b1" font-size="9">água drenada → sólidos retidos → volta ao reservatório</text>
+        <path d="M430 131 C 310 131, 250 128, 249 82" fill="none" stroke="#8ee08a" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+
+        <!-- Linha B -->
+        <text x="12" y="222" fill="#f2c14e" font-size="11" font-family="Cascadia Code, monospace" letter-spacing="2">LINHA B · REÚSO DE ÁGUA → PAREDE BIONATIVA</text>
+        <rect x="12" y="232" width="218" height="56" rx="10" fill="#123a27" stroke="#f2c14e" stroke-width="1.6"/>
+        <text x="121" y="255" text-anchor="middle" fill="#d8f6e6" font-size="12.5" font-weight="700">Cozinha da escola</text>
+        <text x="121" y="272" text-anchor="middle" fill="#9ec9b1" font-size="10">enxágue de vegetais · sem produtos</text>
+
+        <line x1="230" y1="260" x2="262" y2="260" stroke="#f2c14e" stroke-width="2" marker-end="url(#arrowAmber)"/>
+        <rect x="264" y="232" width="150" height="56" rx="10" fill="#123a27" stroke="#f2c14e" stroke-width="1.6"/>
+        <text x="339" y="255" text-anchor="middle" fill="#d8f6e6" font-size="12.5" font-weight="700">Linha B de reúso</text>
+        <text x="339" y="272" text-anchor="middle" fill="#9ec9b1" font-size="10">tubulação separada e marcada</text>
+
+        <line x1="414" y1="260" x2="446" y2="260" stroke="#f2c14e" stroke-width="2" marker-end="url(#arrowAmber)"/>
+        <rect x="448" y="232" width="318" height="56" rx="10" fill="#0d2b1d" stroke="#f2c14e" stroke-width="2"/>
+        <text x="607" y="255" text-anchor="middle" fill="#eafff1" font-size="12.5" font-weight="800">PAREDE BIONATIVA</text>
+        <text x="607" y="272" text-anchor="middle" fill="#f2c14e" font-size="10">apenas plantas NÃO comestíveis</text>
+      </svg>
+      <figcaption>Linha A (chuva/potável) irriga a horta · Linha B (enxágue sem produtos) irriga a parede bionativa · as linhas nunca se misturam</figcaption>
+    </figure>
+
+    <h4 class="sub">Duas linhas de água — regras inegociáveis</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Linha</th><th>Origem</th><th>Destino</th><th>Regras</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag line-a">LINHA A</span></td><td>Água de chuva captada (telhado) filtrada; ou água potável como contingência</td><td><strong>Torres verticais</strong> (hortaliças comestíveis)</td><td>Reservatório opaco e tamponado; tela/filtro na entrada; sem água de reuso nesta linha</td></tr>
+          <tr><td><span class="tag line-b">LINHA B</span></td><td><strong>Reúso leve</strong>: água de enxágue de vegetais/hortaliças da cozinha (sem sabão, sanitizantes ou químicos)</td><td><strong>Parede bionativa</strong> (plantas ornamentais/nativas)</td><td>Tubulação separada e sinalizada; <strong>nunca</strong> alimenta a horta comestível; coletor próprio na cozinha</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 class="sub">Módulos verticais</h4>
+    <ul class="clean">
+      <li>Torres de PET empilhadas ou painéis de pallet com 3–6 níveis; folhosas por andar (alface, rúcula, couve, hortelã, cebolinha).</li>
+      <li><strong>Irrigação por gotejo</strong> com emissores por andar; excesso drena para o coletor e retorna ao reservatório (circuito fechado).</li>
+      <li>Ocupa ~1 m² por torre — solução para pátios escolares pequenos; empilhamento permite manutenção fácil (acesso frontal).</li>
+      <li>Madeiramento/suporte tratado para exterior; sombreamento parcial nos horários de pico para reduzir evaporação.</li>
+    </ul>
+
+    <h4 class="sub">Controle inteligente (ESP32)</h4>
+    <ul class="clean">
+      <li><strong>Irrigação:</strong> só se umidade &lt; X% <strong>e</strong> sem chuva nas últimas 24h <strong>e</strong> nível do reservatório &gt; 20% → abre válvula por ciclo programado (ex.: 3 min) e registra litros.</li>
+      <li><strong>Desvio por linha:</strong> bomba única com válvula de 2 vias — Linha A (Horta) ou Linha B (Parede) — nunca as duas ao mesmo tempo sem lavagem da linha.</li>
+      <li><strong>Alertas:</strong> reservatório vazio, filtro entupido (fluxo baixo) ou falha de sensor → mensagem no painel/celular.</li>
+      <li><strong>Log semanal:</strong> litros captados, litros reutilizados, irrigações realizadas — base para o mural “Sentinela da Água”.</li>
+    </ul>
+
+    <h4 class="sub">Manutenção quinzenal (checklist no mural)</h4>
+    <ul class="clean">
+      <li>Esvaziar e lavar o filtro de sólidos; verificar algas (reservatório opaco ajuda).</li>
+      <li>Inspecionar mangueiras/gotejadores por entupimento; limpar malha da calha.</li>
+      <li>Conferir se há resíduos de produtos de limpeza no coletor da cozinha (Linha B).</li>
+      <li>Trocar água parada há &gt; 7 dias; registrar no log.</li>
+    </ul>
+    <p><span class="tag">CUSTO EXTRA</span> Reservatório (500–1000 L), filtro e tubulação ≈ <strong>R$ 120–250</strong> (podem vir de doação/feira). Estimativa total atualizada no item 05.</p>
+  </div>
+</section>
+
+<!-- ===== 05 · PROTÓTIPO E ELETRÔNICA ===== -->
+<section class="block" id="sec5" data-section>
+  <div class="block-head">
+    <div class="secnum">05</div>
+    <h3>Protótipo e Eletrônica<small>Plataforma única: Arduino/ESP32 · orçamento · segurança</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <h4 class="sub">Decisão técnica</h4>
+    <p>O projeto usa <strong>somente eletrônica com Arduino/ESP32</strong> — sem SPIKE Prime. O <strong>ESP32 com Wi-Fi</strong> concentra a lógica do Sentinela: leitura dos sensores, controle das bombas/válvulas das Linhas A e B e o <strong>painel de dados</strong> (página simples servida pelo próprio ESP32, acessível pelo celular na rede escolar — ou display físico com as principais leituras).</p>
+    <ul class="clean">
+      <li><strong>ESP32 (×1)</strong> — controlador central; Wi-Fi para painel e relatórios.</li>
+      <li><strong>Arduino Uno/Nano (opcional)</strong> — se quiser separar o controle crítico (irrigação) do painel, usando um módulo por função; senão, só ESP32 basta.</li>
+      <li><strong>Sensores</strong> — capacitivos de umidade (×2), chuva, nível (ultrassônico), DHT22 (temp./umidade), LDR/BH1750 (luz), ultrassônico/câmera p/ fauna.</li>
+      <li><strong>Atuadores</strong> — bomba 12V + relé, válvula de 2 vias (desvio Linha A/B), opcionalmente válvulas solenoides de gotejo.</li>
+      <li><strong>Demonstração ao vivo:</strong> torre vertical de 3–4 andares + painel com dados reais — impacto visual garantido para os juízes.</li>
+    </ul>
+
+    <h4 class="sub">Orçamento estimado (V1.1)</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Faixa de custo</th></tr></thead>
+        <tbody>
+          <tr><td>ESP32 + relé + assentos/protoboard</td><td>≈ R$ 40–80</td></tr>
+          <tr><td>Sensores (umidade ×2, chuva, nível, DHT22, LDR)</td><td>≈ R$ 60–100</td></tr>
+          <tr><td>Bomba 12V + mangueira / gotejo + válvula 2 vias</td><td>≈ R$ 60–110</td></tr>
+          <tr><td>Reservatório (500–1000 L) + filtro + calha</td><td>≈ R$ 120–250 (doável)</td></tr>
+          <tr><td>PET / pallets (torres e parede)</td><td>R$ 0 (reúso)</td></tr>
+          <tr><td>Mudas nativas e hortaliças</td><td>R$ 0–60 (doação/viveiro)</td></tr>
+          <tr><td><strong>Total estimado</strong></td><td><strong>≈ R$ 250–500</strong> (antes das doações)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 class="sub">Segurança</h4>
+    <ul class="clean">
+      <li>Somente <strong>baixa tensão</strong> (5V / 12V); 110/220V longe do protótipo e sempre fora da água.</li>
+      <li>Ligações à prova d’água; <strong>Linhas A e B fisicamente separadas</strong> e sinalizadas (cores de fita/etiqueta).</li>
+      <li>Chave de desligamento visível; bomba com tempo máximo de ciclo (ex.: 5 min) contra vazamentos.</li>
+      <li>Teste completo antes da apresentação; fallback manual (registro/timer físico) se a eletrônica falhar.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 06 · PAREDE BIONATIVA ===== -->
+<section class="block" id="sec6" data-section>
+  <div class="block-head">
+    <div class="secnum">06</div>
+    <h3>Parede Bionativa<small>Estrutura · substrato · espécies · manutenção · educação · regada por reúso</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Etapa</th><th>Detalhamento</th></tr></thead>
+        <tbody>
+          <tr><td>Estrutura</td><td>Treliça + <strong>PET cortado como jardineira vertical</strong> (ou módulo de pallet); fixação firme com arame/braçadeiras.</td></tr>
+          <tr><td>Substrato</td><td>Terra + <strong>composto da composteira comunitária</strong> — fecha o ciclo resíduo → adubo.</td></tr>
+          <tr><td>Espécies</td><td><strong>Somente nativas da sua região</strong> — lista a validar com biólogo/viveiro local (ex.: maracujazeiro nativo, faveira, salvias/asteráceas nativas atratoras de polinizadores). ⚠️ Não “chutar” a lista — a validação vira credibilidade na pesquisa.</td></tr>
+          <tr><td>Camadas</td><td>Herbáceas embaixo → arbustos no meio → trepadeira no alto (estratificação em miniatura da floresta).</td></tr>
+          <tr><td>Rega</td><td><strong>Linha B de reúso</strong>: gotejo alimentado pelo circuito da cozinha (enxágue sem químicos); ou Linha A (chuva) como reforço — nunca ao contrário.</td></tr>
+          <tr><td>Manutenção</td><td>Turma responsável + pais; inspeção quinzenal; poda de condução da trepadeira.</td></tr>
+          <tr><td>Educação</td><td>QR codes com nome científico, função ecológica e curiosidades; visitas guiadas para outras escolas.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4 class="sub">Papel ecológico</h4>
+    <ul class="clean">
+      <li>Refúgio e fonte de alimento para <strong>abelhas nativas sem ferrão</strong> (ex.: jataí) e beija-flores.</li>
+      <li>Corredor vertical: conecta o nível da horta ao alto do muro — “ponte verde” na paisagem urbana.</li>
+      <li>Microclima: sombra, retenção de poeira e conforto térmico no pátio; <strong>fecha o ciclo hídrico</strong> aproveitando a água de reuso.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 07 · VIÉS COMUNITÁRIO ===== -->
+<section class="block" id="sec7" data-section>
+  <div class="block-head">
+    <div class="secnum">07</div>
+    <h3>Viés Comunitário<small>Onde a proposta ganha pontos e permanência</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <ul class="clean">
+      <li><strong>Comitê Sentinela</strong> — pais, alunos, funcionários, vizinhos e associação de bairro; decisões compartilhadas e continuidade após o evento.</li>
+      <li><strong>Distribuição da colheita</strong> — merenda escolar + doação a famílias (impacto social mensurável: kg de hortaliças distribuídos).</li>
+      <li><strong>Reúso comunitário da água</strong> — a cozinha da escola fornece o enxágue de vegetais (sem produtos) para a <strong>Linha B</strong>; nunca para a horta comestível. Sinalização na pia e orientação à equipe de cozinha.</li>
+      <li><strong>Adote um módulo</strong> — cada turma (ou família) adota uma torre/canteiro ou um trecho da parede: responsabilidade e pertencimento.</li>
+      <li><strong>Composteira comunitária</strong> — resíduos orgânicos do bairro viram adubo da horta e da parede (economia circular).</li>
+      <li><strong>Ciência cidadã</strong> — registros de espécies no iNaturalist / Wikiaves; mural “Visitantes da Horta” atualizado semanalmente.</li>
+      <li><strong>Mapa de Corredores Vivos</strong> — horta vertical + parede ligadas a praças e outras escolas; meta mínima: 3 pontos conectados.</li>
+      <li><strong>Oficinas abertas</strong> — outras escolas e o bairro aprendem a replicar (replicabilidade pesa na rubrica e no legado do projeto).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 08 · MÉTRICAS DE IMPACTO ===== -->
+<section class="block" id="sec8" data-section>
+  <div class="block-head">
+    <div class="secnum">08</div>
+    <h3>Métricas de Impacto<small>Preencha “Atual” durante o projeto — before/after</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Métrica</th><th>Como medir</th><th>Meta sugerida</th><th>Atual</th></tr></thead>
+        <tbody>
+          <tr><td>Água potável economizada</td><td>Litros/semana: irrigação inteligente × manual</td><td>≥ 40% de redução</td><td><input class="metric-input" data-metric="agua" inputmode="decimal" placeholder="—" aria-label="Água economizada atual"></td></tr>
+          <tr><td>Água de chuva captada</td><td>Litros/semana medidos no reservatório</td><td>≥ 200 L/mês na chuva</td><td><input class="metric-input" data-metric="chuva" inputmode="decimal" placeholder="—" aria-label="Água de chuva captada"></td></tr>
+          <tr><td>Água reutilizada (Linha B)</td><td>Litros/semana medidos pelo desvio/contador</td><td>≥ 30% do consumo total sem água potável</td><td><input class="metric-input" data-metric="reuso" inputmode="decimal" placeholder="—" aria-label="Água reutilizada"></td></tr>
+          <tr><td>Hortaliças produzidas</td><td>Kg colhidos e % doados a famílias/merenda</td><td>≥ 5 kg/mês</td><td><input class="metric-input" data-metric="kg" inputmode="decimal" placeholder="—" aria-label="Hortaliças produzidas"></td></tr>
+          <tr><td>Mudas nativas plantadas</td><td>Nº e % de sobrevivência aos 30–60 dias</td><td>≥ 20 mudas · ≥ 70%</td><td><input class="metric-input" data-metric="mudas" inputmode="text" placeholder="—" aria-label="Mudas nativas"></td></tr>
+          <tr><td>Espécies observadas</td><td>Censo antes/depois + registros iNaturalist/Wikiaves</td><td>Aumento registrado</td><td><input class="metric-input" data-metric="especies" inputmode="text" placeholder="—" aria-label="Espécies observadas"></td></tr>
+          <tr><td>Pessoas engajadas</td><td>Alunos + famílias + escolas visitantes</td><td>≥ 100 pessoas</td><td><input class="metric-input" data-metric="pessoas" inputmode="numeric" placeholder="—" aria-label="Pessoas engajadas"></td></tr>
+          <tr><td>Pontos no Mapa de Corredores</td><td>Nº de pontos verdes conectados</td><td>≥ 3 pontos</td><td><input class="metric-input" data-metric="corredores" inputmode="numeric" placeholder="—" aria-label="Pontos no mapa"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><span class="tag ok">DICA DE JUIZ</span> Leve os números na apresentação — impressão do painel “Sentinela” ou fotos do mural valem mais que promessas.</p>
+  </div>
+</section>
+
+<!-- ===== 09 · RUBRICA ===== -->
+<section class="block" id="sec9" data-section>
+  <div class="block-head">
+    <div class="secnum">09</div>
+    <h3>Alinhamento com a Rubrica<small>Projeto de Inovação (rubrica do evento FLL)</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Critério do juiz</th><th>Resposta da proposta</th></tr></thead>
+        <tbody>
+          <tr><td>Problema claro e justificado</td><td>Seção 01 + dados locais (semana de linha de base no pátio/bairro, incluindo consumo de água).</td></tr>
+          <tr><td>Pesquisa de soluções existentes</td><td>Hortas escolares (FAO / Embrapa), irrigação por gotejo, <strong>captação pluvial e reúso de água</strong>, jardins de polinizadores, iNaturalist/Wikiaves, living walls.</td></tr>
+          <tr><td>Inovação</td><td>Integração vertical + <strong>circuito fechado de água</strong> + Linha B de reuso + monitoramento DIY com ESP32 + gestão comunitária; baixo custo e replicável.</td></tr>
+          <tr><td>Protótipo</td><td>Torre vertical com gotejo funcionando ao vivo + painel ESP32 com dados reais + parede bionativa em montagem.</td></tr>
+          <tr><td>Iteração com feedback</td><td>Sessão 8 do Caderno: direção, famílias e outra equipe avaliam; mudanças registradas no “Feedback” (pág. 29 do Caderno de Engenharia).</td></tr>
+          <tr><td>Impacto</td><td>Seção 08 com métricas quantificadas (antes/depois), incluindo litros de água captados/reutilizados.</td></tr>
+          <tr><td>Core Values</td><td>Inclusão (comunidade inteira), trabalho em equipe, impacto, descoberta, diversão — todos demonstrados no projeto.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><span class="tag">LEMBRETE</span> Core Values também são avaliados na sessão de avaliação — distribua a fala entre todos os membros e cite Coopertition/Gracious Professionalism explicitamente.</p>
+  </div>
+</section>
+
+<!-- ===== 10 · ROTEIRO DE PESQUISA ===== -->
+<section class="block" id="sec10" data-section>
+  <div class="block-head">
+    <div class="secnum">10</div>
+    <h3>Roteiro de Pesquisa<small>Fontes confiáveis + perguntas para o especialista</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <h4 class="sub">Fontes e eixos de pesquisa</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Eixo</th><th>Onde buscar</th><th>O que capturar</th></tr></thead>
+        <tbody>
+          <tr><td>Hortas escolares</td><td>FAO — <em>School Gardens</em>; Embrapa (hortas urbanas/escolares)</td><td>Benefícios comprovados; modelos de implantação; custo</td></tr>
+          <tr><td>Irrigação eficiente</td><td>Embrapa / universidades — “irrigação por gotejo economia de água”</td><td>Comparativo gotejo × manual; dimensionamento simples</td></tr>
+          <tr><td><strong>Recursos hídricos / reúso</strong></td><td>Embrapa; FAO; manuais de captação pluvial e águas cinzas leves (ex.: Sabesp/simpósios de saneamento)</td><td>Segurança sanitária; o que é permitido em hortaliças × plantas ornamentais; dimensionamento de filtro e reservatório</td></tr>
+          <tr><td>Polinizadores nativos</td><td>ICMBio · Embrapa Meio Ambiente · meliponicultura</td><td>Espécies-chave (ex.: jataí); plantas atratoras por região</td></tr>
+          <tr><td>Paredes verdes</td><td>Estudos de <em>living walls</em> e biodiversidade urbana</td><td>Sistemas, manutenção, sobrevivência de espécies</td></tr>
+          <tr><td>Ciência cidadã</td><td>iNaturalist · Wikiaves</td><td>Espécies reais já registradas no seu bairro/cidade</td></tr>
+          <tr><td>Especialista local</td><td>Biólogo, técnico agrícola ou professor de Biologia</td><td>Validação de espécies e do sistema hídrico; carta de apoio</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 class="sub">Perguntas prontas para o especialista</h4>
+    <div class="checklist" data-checklist>
+      <div class="checklist-top"><strong>Roteiro da entrevista</strong><span class="count">0/7</span></div>
+      <label class="chk"><input type="checkbox" data-check="pesq-1"><span class="txt">Quais 3–5 espécies nativas rústicas você recomenda para a nossa parede bionativa?</span></label>
+      <label class="chk"><input type="checkbox" data-check="pesq-2"><span class="txt">Quais polinizadores nativos já ocorrem no bairro e quais plantas os atraem?</span></label>
+      <label class="chk"><input type="checkbox" data-check="pesq-3"><span class="txt">Qual a umidade ideal de solo para as hortaliças que escolhemos, por espécie?</span></label>
+      <label class="chk"><input type="checkbox" data-check="pesq-4"><span class="txt">Como fazer o manejo orgânico das pragas mais comuns sem químicos?</span></label>
+      <label class="chk"><input type="checkbox" data-check="pesq-5"><span class="txt">A estrutura da parede e das torres (PET/pallet) é segura e quais ajustes você sugere?</span></label>
+      <label class="chk"><input type="checkbox" data-check="pesq-6"><span class="txt">Que fontes/indicadores devemos registrar para provar impacto aos juízes?</span></label>
+      <label class="chk"><input type="checkbox" data-check="pesq-7"><span class="txt">Quais fontes de água de reuso são seguras para a Linha B — e o que você jamais colocaria na Linha A?</span></label>
+    </div>
+
+    <p><span class="tag">SUA LINHA DE BASE</span> Antes de mexer em nada: 1 semana contando plantas, espécies e <strong>consumo de água da irrigação atual</strong> — vira o “antes” da apresentação.</p>
+  </div>
+</section>
+
+<!-- ===== 11 · RISCOS ===== -->
+<section class="block" id="sec11" data-section>
+  <div class="block-head">
+    <div class="secnum">11</div>
+    <h3>Riscos e Mitigações<small>Antecipe-se às perguntas difíceis dos juízes</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Risco</th><th>Mitigação</th></tr></thead>
+        <tbody>
+          <tr><td>Bomba / vazamento / falha elétrica</td><td>Somente baixa tensão; ligações à prova d’água; teste prévio; chave manual de desligamento; bomba com timer.</td></tr>
+          <tr><td><strong>Contaminação cruzada das linhas de água</strong></td><td>Linhas A e B separadas e sinalizadas; reuso <strong>nunca</strong> irriga hortaliças; válvula de 2 vias exclusiva; tubulações de cores diferentes.</td></tr>
+          <tr><td><strong>Resíduos de sabão/químicos no coletor da cozinha</strong></td><td>Apenas enxágue sem produtos; aviso na pia da cozinha; auditoria semanal do responsável; desvio imediato de qualquer água duvidosa para descarte comum.</td></tr>
+          <tr><td>Filtro de retorno entupido / retorno com detritos</td><td>Filtro de sólidos (areia/manta) antes do reservatório; limpeza quinzenal registrada no mural; válvula de escoamento do fundo.</td></tr>
+          <tr><td>Reservatório com mosquitos / algas</td><td>Reservatório opaco e tamponado; tela na entrada da calha; troca de água a cada 7 dias; peixe/preventivos naturais se permitido pelo especialista.</td></tr>
+          <tr><td>Mudas nativas não adaptadas</td><td>Validar lista com especialista; começar por 3–5 espécies rústicas; substituir as que falharem.</td></tr>
+          <tr><td>Perda de interesse dos alunos</td><td>Rotação de funções; “adote um módulo”; calendário público de colheita; papéis rotativos (Caderno, pág. 9).</td></tr>
+          <tr><td>Orçamento apertado</td><td>PET/pallets; doação de viveiros; patrocínio do comércio local; feira de arrecadação na escola.</td></tr>
+          <tr><td>Pragas na horta</td><td>Manejo orgânico com orientação técnica; armadilhas/ plantas defensivas; evitar defensivos químicos.</td></tr>
+          <tr><td>Estrutura das torres ou da parede cede</td><td>Base firme; fixação com arame/braçadeira; inspeção quinzenal; drenagem adequada dos vasos.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 12 · PRÓXIMOS PASSOS ===== -->
+<section class="block" id="sec12" data-section>
+  <div class="block-head">
+    <div class="secnum">12</div>
+    <h3>Próximos Passos<small>Checklist executável — progresso salvo neste navegador</small></h3>
+    <button class="status" data-state="0" aria-label="Alternar status da seção">Pendente</button>
+  </div>
+  <div class="block-body">
+    <div class="checklist" data-checklist id="checklistNext">
+      <div class="checklist-top"><strong>Plano de ação V1.1</strong><span class="count">0/10</span></div>
+      <label class="chk"><input type="checkbox" data-check="next-1"><span class="txt">Semana de linha de base: contar plantas, espécies e gasto de água na irrigação atual</span></label>
+      <label class="chk"><input type="checkbox" data-check="next-2"><span class="txt">Carta de apoio: direção da escola + 1 especialista (biólogo/técnico agrícola)</span></label>
+      <label class="chk"><input type="checkbox" data-check="next-3"><span class="txt">Escopo do protótipo: 1 torre vertical (3–4 andares) + parede de ~3–4 m² como vitrine</span></label>
+      <label class="chk"><input type="checkbox" data-check="next-4"><span class="txt">Lista de espécies nativas validada com especialista (parede e horta)</span></label>
+      <label class="chk"><input type="checkbox" data-check="next-5"><span class="txt">Desenhar as duas linhas de água (A: chuva/potável para horta · B: reúso para parede) com tubulações sinalizadas</span></label>
+      <label class="chk"><input type="checkbox" data-check="next-6"><span class="txt">Projetar torres verticais (nº de andares, vasos PET, fixação, gotejo por andar)</span></label>
+      <label class="chk"><input type="checkbox" data-check="next-7"><span class="txt">Montar reservatório de chuva + filtro de retorno + teste de 7 dias</span></label>
+      <label class="chk"><input type="checkbox" data-check="next-8"><span class="txt">Divisão de funções da equipe (Caderno, pág. 9) e cronograma nas 12 sessões</span></label>
+      <label class="chk"><input type="checkbox" data-check="next-9"><span class="txt">Orçamento final (≈ R$ 250–500, antes de doações) e método de arrecadação</span></label>
+      <label class="chk"><input type="checkbox" data-check="next-10"><span class="txt">Identidade visual: logo “Horta Sentinela”, mural de dados (água + fauna) e QR codes</span></label>
+    </div>
+    <p><span class="tag">ORDEM SUGERIDA</span> 1 → 2 → 4 desbloqueiam o restante; 5 → 7 montam o sistema hídrico; 3 e 8 garantem o protótipo; 9 e 10 fecham a execução e a comunicação.</p>
+  </div>
+</section>
+
+<!-- ===== REGISTRO DE ALTERAÇÕES ===== -->
+<section class="block" id="registro">
+  <div class="block-head">
+    <div class="secnum">✎</div>
+    <h3>Registro de Alterações<small>Histórico de versões + log de decisões suas</small></h3>
+  </div>
+  <div class="block-body">
+    <div class="history">
+      <h5>Versão 1.1 — 04/11/2026</h5>
+      <ul>
+        <li>SPIKE Prime removido; plataforma única: Arduino/ESP32.</li>
+        <li>Horta em módulos verticais (PET/pallet) com gotejo.</li>
+        <li>Nova seção 04 — Recursos Hídricos: captação de chuva, circuito fechado com filtro, Linha B de reúso para a parede.</li>
+        <li>Contador de dias até o evento (quadros de status/tarefas).</li>
+        <li>Resetar com confirmação em duas etapas.</li>
+      </ul>
+      <h5>Versão 1 — 04/11/2026</h5>
+      <ul>
+        <li>Proposta inicial “Horta Sentinela — Corredores Vivos de Biodiversidade Escolar” (3 pilares + hub Sentinela).</li>
+      </ul>
+    </div>
+
+    <div class="log-controls">
+      <input type="text" id="decisionInput" placeholder="Ex.: trocamos alface por rúcula; adicionamos sensor de pH…" aria-label="Nova alteração" autocomplete="off">
+      <button id="addDecision">Adicionar</button>
+    </div>
+    <ul class="log-list" id="decisionList" aria-live="polite"></ul>
+    <p class="log-empty" id="logEmpty">Nenhuma alteração manual registrada ainda. Use o campo acima para versionar suas próximas mudanças.</p>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Horta Sentinela — Corredores Vivos de Biodiversidade Escolar · Registro do Projeto de Inovação · <strong>Versão 1.1</strong> (04/11/2026)</span>
+  <span>Dados salvos localmente neste navegador · Imprima para PDF se quiser arquivar</span>
+</footer>
+
+</main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  'use strict';
+  const LS_KEY = 'horta-sentinela-v1';
+  const STATUS = ['Pendente','Em andamento','Concluído'];
+
+  const load = () => { try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch(e){ return {}; } };
+  const save = (s) => { try { localStorage.setItem(LS_KEY, JSON.stringify(s)); } catch(e){} };
+  let state = load();
+  state.checks   = state.checks   || {};
+  state.status   = state.status   || {};
+  state.metrics  = state.metrics  || {};
+  state.meta     = state.meta     || {};
+  state.decisions= state.decisions|| [];
+
+  /* ---------- Migração de status V1 → V1.1 (renumeração de seções) ---------- */
+  if (!state.migrated_v11) {
+    const remap = {sec4:'sec5', sec5:'sec6', sec6:'sec7', sec7:'sec8', sec8:'sec9', sec9:'sec10', sec10:'sec11', sec11:'sec12'};
+    const next = {};
+    Object.keys(state.status).forEach(k => { next[remap[k] || k] = state.status[k]; });
+    state.status = next;
+    state.migrated_v11 = true;
+    save(state);
+  }
+
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 2200);
+  }
+
+  /* ---------- Meta editável + contador de dias até o evento ---------- */
+  const eventoDataInput = document.getElementById('m-eventoData');
+  const statCountdown   = document.getElementById('statCountdown');
+  const lblCountdown    = document.getElementById('lblCountdown');
+  const subCountdown    = document.getElementById('subCountdown');
+
+  function updateCountdown(){
+    const raw = eventoDataInput.value;
+    if (!raw) {
+      statCountdown.textContent = '—';
+      lblCountdown.textContent  = 'Defina a data do evento';
+      subCountdown.textContent  = 'Use o campo “Data do evento” acima';
+      return;
+    }
+    const [y, m, d] = raw.split('-').map(Number);
+    const ev = new Date(y, m - 1, d);
+    const now = new Date(); now.setHours(0,0,0,0);
+    const diff = Math.round((ev - now) / 86400000);
+    const fmt = ev.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' });
+    subCountdown.textContent = 'Data do evento: ' + fmt;
+    if (diff > 0) {
+      statCountdown.textContent = diff;
+      lblCountdown.textContent  = diff === 1 ? 'dia até o evento' : 'dias até o evento';
+    } else if (diff === 0) {
+      statCountdown.textContent = 'É hoje!';
+      lblCountdown.textContent  = 'Boa sorte no evento 🌱';
+    } else {
+      statCountdown.textContent = Math.abs(diff);
+      lblCountdown.textContent  = Math.abs(diff) === 1 ? 'dia desde o evento' : 'dias desde o evento';
+    }
+  }
+
+  document.querySelectorAll('[data-meta]').forEach(input=>{
+    const key = input.dataset.meta;
+    if (state.meta[key] !== undefined) input.value = state.meta[key];
+    input.addEventListener('input', ()=>{
+      state.meta[key] = input.value;
+      save(state);
+      if (input === eventoDataInput) updateCountdown();
+    });
+  });
+  updateCountdown();
+
+  /* ---------- Checklists ---------- */
+  function refreshChecklist(box){
+    const boxes = box.querySelectorAll('input[type="checkbox"]');
+    const done  = [...boxes].filter(b=>b.checked).length;
+    const counter = box.querySelector('.count');
+    if (counter) counter.textContent = done + '/' + boxes.length;
+  }
+  document.querySelectorAll('[data-checklist]').forEach(box=>{
+    box.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+      const id = cb.dataset.check;
+      if (state.checks[id]) cb.checked = true;
+      cb.addEventListener('change', ()=>{
+        state.checks[id] = cb.checked;
+        save(state);
+        refreshChecklist(box);
+        refreshDashboard();
+      });
+    });
+    refreshChecklist(box);
+  });
+
+  /* ---------- Status por seção ---------- */
+  const statusButtons = document.querySelectorAll('.status[data-state]');
+  function applyStatus(btn){
+    const sec = btn.closest('[data-section]');
+    const key = sec ? sec.id : btn.dataset.key;
+    const idx = Number(state.status[key] ?? 0);
+    btn.dataset.state = String(idx);
+    btn.textContent = STATUS[idx];
+  }
+  statusButtons.forEach(btn=>{
+    const sec = btn.closest('[data-section]');
+    if (sec) btn.dataset.key = sec.id;
+    applyStatus(btn);
+    btn.addEventListener('click', ()=>{
+      const key = btn.dataset.key;
+      const idx = (Number(state.status[key] ?? 0) + 1) % STATUS.length;
+      state.status[key] = idx;
+      save(state);
+      applyStatus(btn);
+      refreshDashboard();
+      toast('Status atualizado: ' + STATUS[idx]);
+    });
+  });
+
+  /* ---------- Métricas ---------- */
+  document.querySelectorAll('[data-metric]').forEach(input=>{
+    const key = input.dataset.metric;
+    if (state.metrics[key] !== undefined) input.value = state.metrics[key];
+    input.addEventListener('input', ()=>{
+      state.metrics[key] = input.value;
+      save(state);
+    });
+  });
+
+  /* ---------- Dashboard ---------- */
+  const TOTAL_SECTIONS = document.querySelectorAll('[data-section]').length;
+  const statSections = document.getElementById('statSections');
+  const statTasks    = document.getElementById('statTasks');
+  const barSections  = document.getElementById('barSections');
+  const barTasks     = document.getElementById('barTasks');
+  function refreshDashboard(){
+    const done = Object.values(state.status).filter(v=>Number(v)===2).length;
+    statSections.textContent = done + '/' + TOTAL_SECTIONS;
+    barSections.style.width = (TOTAL_SECTIONS ? (done/TOTAL_SECTIONS*100) : 0) + '%';
+    const nextBox = document.getElementById('checklistNext');
+    const boxes = nextBox.querySelectorAll('input[type="checkbox"]');
+    const tDone = [...boxes].filter(b=>b.checked).length;
+    statTasks.textContent = tDone + '/' + boxes.length;
+    barTasks.style.width = (boxes.length ? (tDone/boxes.length*100) : 0) + '%';
+  }
+  refreshDashboard();
+
+  /* ---------- Registro de alterações ---------- */
+  const input     = document.getElementById('decisionInput');
+  const addBtn    = document.getElementById('addDecision');
+  const list      = document.getElementById('decisionList');
+  const emptyNote = document.getElementById('logEmpty');
+  const fmt = ts => new Date(ts).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
+  function renderDecisions(){
+    list.innerHTML = '';
+    emptyNote.style.display = state.decisions.length ? 'none' : 'block';
+    state.decisions.forEach((d, i)=>{
+      const li = document.createElement('li');
+      li.className = 'log-item';
+      const time = document.createElement('time');
+      time.textContent = fmt(d.t);
+      const txt = document.createElement('div');
+      txt.className = 'txt';
+      txt.textContent = d.text;
+      const del = document.createElement('button');
+      del.textContent = '✕';
+      del.setAttribute('aria-label','Remover registro');
+      del.addEventListener('click', ()=>{
+        state.decisions.splice(i,1);
+        save(state);
+        renderDecisions();
+        toast('Registro removido');
+      });
+      li.append(time, txt, del);
+      list.appendChild(li);
+    });
+  }
+  function addDecision(){
+    const text = input.value.trim();
+    if (!text) { toast('Escreva a alteração antes de adicionar'); return; }
+    state.decisions.unshift({ t: Date.now(), text });
+    save(state);
+    input.value = '';
+    renderDecisions();
+    toast('Alteração registrada');
+  }
+  addBtn.addEventListener('click', addDecision);
+  input.addEventListener('keydown', e=>{ if (e.key === 'Enter') addDecision(); });
+  renderDecisions();
+
+  /* ---------- Resetar em DUAS ETAPAS ---------- */
+  const btnReset = document.getElementById('btnReset');
+  let armTimer = null;
+  const ARM_MS = 5000;
+
+  function disarmReset(){
+    clearInterval(armTimer);
+    armTimer = null;
+    btnReset.classList.remove('arming');
+    btnReset.style.setProperty('--arm','0%');
+    btnReset.textContent = '↺ Resetar';
+  }
+  function armReset(){
+    if (armTimer) { // segunda etapa: confirma o reset
+      clearInterval(armTimer);
+      armTimer = null;
+      localStorage.removeItem(LS_KEY);
+      toast('Progresso apagado. Recarregando…');
+      setTimeout(()=>location.reload(), 600);
+      return;
+    }
+    btnReset.classList.add('arming');
+    const start = Date.now();
+    btnReset.textContent = '⚠ Confirmar reset?';
+    armTimer = setInterval(()=>{
+      const elapsed = Date.now() - start;
+      const pct = Math.min(100, (elapsed / ARM_MS) * 100);
+      btnReset.style.setProperty('--arm', pct.toFixed(1) + '%');
+      if (elapsed >= ARM_MS) disarmReset(); // expirou sem confirmar
+    }, 100);
+  }
+  btnReset.addEventListener('click', armReset);
+
+  /* ---------- Imprimir ---------- */
+  document.getElementById('btnPrint').addEventListener('click', ()=>window.print());
+
+  /* ---------- Scroll-spy da navegação ---------- */
+  const links = document.querySelectorAll('#navList a[href^="#"]');
+  const map = new Map();
+  links.forEach(a=>{ const el = document.querySelector(a.getAttribute('href')); if (el) map.set(el, a); });
+  const spy = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if (entry.isIntersecting){
+        links.forEach(l=>l.classList.remove('active'));
+        const link = map.get(entry.target);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  map.forEach((_, el)=>spy.observe(el));
+})();
+</script>
+</body>
+</html>
