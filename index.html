@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Horta Sentinela — Versão 1.1 · Registro do Projeto de Inovação</title>
+<title>BioSentinela — Versão 1.2 · Registro do Projeto de Inovação</title>
 <style>
 :root{
   --green-950:#03150c;
@@ -79,29 +79,7 @@ body{
 .btn.danger.arming::after{content:"";position:absolute;left:0;bottom:0;height:2px;background:#1a1206;width:var(--arm,0%);transition:width .1s linear;}
 
 /* ========== LAYOUT ========== */
-.layout{display:flex;align-items:flex-start;}
-.sidebar{
-  position:sticky;top:57px;align-self:flex-start;
-  width:280px;flex:0 0 280px;
-  height:calc(100vh - 57px);overflow-y:auto;
-  border-right:1px solid var(--border);
-  padding:18px 12px 40px;
-  background:var(--green-900);
-}
-.sidebar::-webkit-scrollbar{width:8px;}
-.sidebar::-webkit-scrollbar-thumb{background:var(--green-700);border-radius:8px;}
-.nav-label{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);padding:12px 12px 6px;}
-.nav a{
-  display:flex;align-items:center;gap:10px;text-decoration:none;
-  color:var(--ink-dim);font-size:.85rem;
-  padding:7px 12px;border-radius:8px;border-left:2px solid transparent;transition:.15s;
-}
-.nav a:hover{color:var(--ink);background:var(--green-800);}
-.nav a.active{color:var(--lime);background:var(--card-2);border-left-color:var(--lime);}
-.nav .n{font-family:var(--mono);font-size:.7rem;color:var(--green-300);width:22px;flex:0 0 22px;}
-.nav a.active .n{color:var(--lime);}
-
-.content{flex:1;min-width:0;padding:28px clamp(18px,4vw,48px) 80px;max-width:1160px;}
+.content{padding:28px clamp(18px,4vw,48px) 80px;max-width:1160px;margin:0 auto;}
 
 /* ========== HERO / VISÃO GERAL ========== */
 .hero{
@@ -267,12 +245,6 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 900px){
-  .layout{flex-direction:column;}
-  .sidebar{position:static;width:100%;height:auto;max-height:none;flex:none;border-right:none;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;gap:4px;padding:10px;}
-  .nav{display:flex;gap:4px;}
-  .nav-label{display:none;}
-  .nav a{white-space:nowrap;font-size:.78rem;}
-  .nav .n{width:auto;}
   .topbar h1{font-size:.85rem;}
   .topbar h1 small{display:none;}
   .badge{font-size:.6rem;padding:5px 10px;}
@@ -282,7 +254,7 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
 /* ========== PRINT ========== */
 @media print{
   body{background:#fff;color:#111;}
-  .topbar,.sidebar,.status,.log-controls,.foot .btn{display:none !important;}
+  .topbar,.status,.log-controls,.foot .btn{display:none !important;}
   .content{padding:0;max-width:none;}
   .hero,.block,.stat,.pillar,.checklist,.meta-card,.diagram,.history{background:#fff !important;color:#111 !important;border:1px solid #ddd !important;box-shadow:none !important;}
   .block-body p,.chk span.txt,ul.clean li,.hero h2,.tagline,.narrative{color:#111 !important;}
@@ -308,36 +280,13 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
       <path d="M24 17c5 0 8.6-3.3 8.6-8.2C27.6 8.8 24 12 24 17Z" fill="#236646" stroke="#a5dfc0" stroke-width="1.4" stroke-linejoin="round"/>
       <rect x="15" y="34.5" width="18" height="4.6" rx="2.3" fill="#123a27" stroke="#6fbf92" stroke-width="1.3"/>
     </svg>
-    <h1>Horta Sentinela<small>Registro do Projeto de Inovação · FIRST LEGO League</small></h1>
+    <h1>BioSentinela<small>Registro do Projeto de Inovação · FIRST LEGO League</small></h1>
   </div>
   <div class="spacer"></div>
-  <span class="badge" title="Versão do registro">● Versão 1.1 · 04/11/2026</span>
+  <span class="badge" title="Versão do registro">● Versão 1.2 · 04/11/2026</span>
   <button class="btn" id="btnPrint" title="Imprimir / salvar PDF">🖨 Imprimir</button>
   <button class="btn danger" id="btnReset" title="Apagar todo o progresso salvo neste navegador (duas etapas de confirmação)">↺ Resetar</button>
 </header>
-
-<div class="layout">
-
-<!-- ============ SIDEBAR ============ -->
-<nav class="sidebar" aria-label="Navegação do registro">
-  <div class="nav-label">Navegação</div>
-  <div class="nav" id="navList">
-    <a href="#visao-geral" class="active"><span class="n">00</span>Visão Geral</a>
-    <a href="#sec1"><span class="n">01</span>Declaração do Problema</a>
-    <a href="#sec2"><span class="n">02</span>Visão Geral da Solução</a>
-    <a href="#sec3"><span class="n">03</span>Arquitetura dos Monitoramentos</a>
-    <a href="#sec4"><span class="n">04</span>Recursos Hídricos e Módulos Verticais</a>
-    <a href="#sec5"><span class="n">05</span>Protótipo e Eletrônica</a>
-    <a href="#sec6"><span class="n">06</span>Parede Bionativa</a>
-    <a href="#sec7"><span class="n">07</span>Viés Comunitário</a>
-    <a href="#sec8"><span class="n">08</span>Métricas de Impacto</a>
-    <a href="#sec9"><span class="n">09</span>Alinhamento com a Rubrica</a>
-    <a href="#sec10"><span class="n">10</span>Roteiro de Pesquisa</a>
-    <a href="#sec11"><span class="n">11</span>Riscos e Mitigações</a>
-    <a href="#sec12"><span class="n">12</span>Próximos Passos</a>
-    <a href="#registro"><span class="n">✎</span>Registro de Alterações</a>
-  </div>
-</nav>
 
 <!-- ============ CONTEÚDO ============ -->
 <main class="content">
@@ -345,7 +294,7 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
 <!-- ===== 00 · VISÃO GERAL ===== -->
 <section class="hero" id="visao-geral">
   <div class="kicker">Projeto de Inovação · FIRST LEGO League Challenge · Temporada BIOGLOW™</div>
-  <h2><em>Horta Sentinela</em><br>Corredores Vivos de Biodiversidade Escolar</h2>
+  <h2><em>BioSentinela</em><br>Corredores Vivos de Biodiversidade Escolar</h2>
   <p class="tagline">“A escola produz alimento e vida — e vigia a biodiversidade que retorna.”</p>
 
   <div class="narrative"><strong>Narrativa BIOGLOW™:</strong> se o BIOGLOW celebra a “luz” da floresta, a nossa horta é a “luz” que reacende a biodiversidade no ambiente urbano — conectando o chão (horta vertical), o sub-bosque (plantas de base) e o dossel (trepadeira da parede bionativa) em um corredor vivo dentro da escola.</div>
@@ -390,9 +339,16 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
 <section class="block" id="mudancas">
   <div class="block-head">
     <div class="secnum">V</div>
-    <h3>Histórico de Evolução<small>V1 → V1.1</small></h3>
+    <h3>Histórico de Evolução<small>V1 → V1.2</small></h3>
   </div>
   <div class="block-body">
+    <h4 class="sub">V1.2 — 04/11/2026</h4>
+    <ul class="clean">
+      <li><strong>Renomeado para BioSentinela</strong> — “Horta Sentinela” aposentado; projeto pronto para publicação em <code>index.html</code> (GitHub Pages).</li>
+      <li><strong>Barra de navegação lateral removida</strong> — leitura contínua em tela cheia; seções em sequência, sem menu.</li>
+      <li>Progresso salvo preservado; histórico de versões atualizado.</li>
+    </ul>
+
     <h4 class="sub">V1.1 — 04/11/2026</h4>
     <ul class="clean">
       <li><strong>SPIKE Prime removido</strong> — a plataforma única passa a ser <strong>eletrônica com Arduino/ESP32</strong> (ESP32 no controle hídrico, sensores e painel; sem kits LEGO no projeto de inovação).</li>
@@ -500,7 +456,7 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
     <h4 class="sub">Desenho do ciclo da água</h4>
     <figure class="diagram" aria-label="Diagrama do ciclo de água do projeto">
       <svg viewBox="0 0 780 350" role="img" aria-labelledby="svgTitle">
-        <title id="svgTitle">Ciclo hídrico do Horta Sentinela: captação de chuva para a horta e reúso de água para a parede bionativa</title>
+        <title id="svgTitle">Ciclo hídrico do BioSentinela: captação de chuva para a horta e reúso de água para a parede bionativa</title>
         <defs>
           <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0,0 L10,5 L0,10 z" fill="#8ee08a"/>
@@ -831,7 +787,7 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
       <label class="chk"><input type="checkbox" data-check="next-7"><span class="txt">Montar reservatório de chuva + filtro de retorno + teste de 7 dias</span></label>
       <label class="chk"><input type="checkbox" data-check="next-8"><span class="txt">Divisão de funções da equipe (Caderno, pág. 9) e cronograma nas 12 sessões</span></label>
       <label class="chk"><input type="checkbox" data-check="next-9"><span class="txt">Orçamento final (≈ R$ 250–500, antes de doações) e método de arrecadação</span></label>
-      <label class="chk"><input type="checkbox" data-check="next-10"><span class="txt">Identidade visual: logo “Horta Sentinela”, mural de dados (água + fauna) e QR codes</span></label>
+      <label class="chk"><input type="checkbox" data-check="next-10"><span class="txt">Identidade visual: logo “BioSentinela”, mural de dados (água + fauna) e QR codes</span></label>
     </div>
     <p><span class="tag">ORDEM SUGERIDA</span> 1 → 2 → 4 desbloqueiam o restante; 5 → 7 montam o sistema hídrico; 3 e 8 garantem o protótipo; 9 e 10 fecham a execução e a comunicação.</p>
   </div>
@@ -845,6 +801,11 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
   </div>
   <div class="block-body">
     <div class="history">
+      <h5>Versão 1.2 — 04/11/2026</h5>
+      <ul>
+        <li>Renomeado para BioSentinela</li>
+        <li>Barra de navegação lateral removida</li>
+      </ul>
       <h5>Versão 1.1 — 04/11/2026</h5>
       <ul>
         <li>SPIKE Prime removido; plataforma única: Arduino/ESP32.</li>
@@ -855,7 +816,7 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
       </ul>
       <h5>Versão 1 — 04/11/2026</h5>
       <ul>
-        <li>Proposta inicial “Horta Sentinela — Corredores Vivos de Biodiversidade Escolar” (3 pilares + hub Sentinela).</li>
+        <li>Proposta inicial “Horta Sentinela” (nome original, renomeado para <strong>BioSentinela</strong> na V1.2) — Corredores Vivos de Biodiversidade Escolar (3 pilares + hub Sentinela).</li>
       </ul>
     </div>
 
@@ -869,19 +830,27 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
 </section>
 
 <footer class="foot">
-  <span>Horta Sentinela — Corredores Vivos de Biodiversidade Escolar · Registro do Projeto de Inovação · <strong>Versão 1.1</strong> (04/11/2026)</span>
+  <span>BioSentinela — Corredores Vivos de Biodiversidade Escolar · Registro do Projeto de Inovação · <strong>Versão 1.2</strong> (04/11/2026)</span>
   <span>Dados salvos localmente neste navegador · Imprima para PDF se quiser arquivar</span>
 </footer>
 
 </main>
-</div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
   'use strict';
-  const LS_KEY = 'horta-sentinela-v1';
+  const LS_KEY = 'biosentinela-v1';
+  const OLD_LS_KEY = 'horta-sentinela-v1';
+
+  // Migração única: preserva o progresso salvo no nome antigo
+  if (!localStorage.getItem(LS_KEY)) {
+    const legacy = localStorage.getItem(OLD_LS_KEY);
+    if (legacy) {
+      try { localStorage.setItem(LS_KEY, legacy); } catch(e){}
+    }
+  }
   const STATUS = ['Pendente','Em andamento','Concluído'];
 
   const load = () => { try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch(e){ return {}; } };
@@ -1107,21 +1076,6 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
 
   /* ---------- Imprimir ---------- */
   document.getElementById('btnPrint').addEventListener('click', ()=>window.print());
-
-  /* ---------- Scroll-spy da navegação ---------- */
-  const links = document.querySelectorAll('#navList a[href^="#"]');
-  const map = new Map();
-  links.forEach(a=>{ const el = document.querySelector(a.getAttribute('href')); if (el) map.set(el, a); });
-  const spy = new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if (entry.isIntersecting){
-        links.forEach(l=>l.classList.remove('active'));
-        const link = map.get(entry.target);
-        if (link) link.classList.add('active');
-      }
-    });
-  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
-  map.forEach((_, el)=>spy.observe(el));
 })();
 </script>
 </body>
