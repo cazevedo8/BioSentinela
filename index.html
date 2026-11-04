@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BioSentinela — Versão 1.2 · Registro do Projeto de Inovação</title>
+<title>BioSentinela — Versão 1.3 · Registro do Projeto de Inovação</title>
 <style>
 :root{
   --green-950:#03150c;
@@ -68,15 +68,6 @@ body{
   position:relative;overflow:hidden;
 }
 .btn:hover{background:var(--green-600);border-color:var(--green-300);}
-.btn.danger{background:transparent;border-color:rgba(226,114,91,.4);color:#f0a695;}
-.btn.danger:hover{background:rgba(226,114,91,.15);}
-/* estado de confirmação do reset */
-.btn.danger.arming{
-  border-color:var(--amber);color:#1a1206;
-  background:linear-gradient(90deg,var(--amber) 0%,var(--amber) var(--arm,0%),rgba(242,193,78,.18) var(--arm,0%));
-  font-weight:800;
-}
-.btn.danger.arming::after{content:"";position:absolute;left:0;bottom:0;height:2px;background:#1a1206;width:var(--arm,0%);transition:width .1s linear;}
 
 /* ========== LAYOUT ========== */
 .content{padding:28px clamp(18px,4vw,48px) 80px;max-width:1160px;margin:0 auto;}
@@ -132,7 +123,15 @@ section.block{
   display:flex;align-items:center;gap:14px;
   padding:16px 20px;border-bottom:1px solid var(--border);
   background:linear-gradient(90deg, rgba(142,224,138,.06), transparent 55%);
+  cursor:pointer;user-select:none;transition:background .2s;
 }
+.block-head::after{
+  content:"▾";font-size:1.1rem;color:var(--green-300);
+  transition:transform .3s;flex:0 0 auto;margin-left:2px;
+}
+section.block.open .block-head::after{transform:rotate(180deg);}
+.block-head:hover{background:linear-gradient(90deg, rgba(142,224,138,.13), transparent 55%);}
+.block-head:focus-visible{outline:2px solid var(--lime);outline-offset:-2px;}
 .secnum{
   font-family:var(--mono);font-size:.75rem;color:#03150c;font-weight:800;
   background:var(--green-300);width:34px;height:34px;border-radius:10px;
@@ -147,7 +146,12 @@ section.block{
 .status[data-state="0"]{color:#f4b8ac;border-color:rgba(226,114,91,.45);background:rgba(226,114,91,.12);}
 .status[data-state="1"]{color:#f8e2a1;border-color:rgba(242,193,78,.45);background:rgba(242,193,78,.12);}
 .status[data-state="2"]{color:#a8f0b8;border-color:rgba(142,224,138,.45);background:rgba(142,224,138,.12);}
-.block-body{padding:18px 20px;}
+/* seções expansíveis: ocultas por padrão, expandidas com .open */
+.block-body{
+  max-height:0;overflow:hidden;padding-top:0;padding-bottom:0;
+  transition:max-height .35s ease, padding-top .35s ease, padding-bottom .35s ease;
+}
+section.block.open .block-body{max-height:2600px;padding:18px 20px;}
 .block-body p{margin:8px 0;color:var(--green-100);}
 .quote{
   border-left:3px solid var(--green-400);padding:12px 14px;border-radius:8px;
@@ -254,7 +258,10 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
 /* ========== PRINT ========== */
 @media print{
   body{background:#fff;color:#111;}
-  .topbar,.status,.log-controls,.foot .btn{display:none !important;}
+  .topbar,.status,.log-controls{display:none !important;}
+  .block-body{max-height:none !important;padding:18px 20px !important;overflow:visible !important;}
+  section.block .block-head{cursor:default;}
+  .block-head::after{content:none;}
   .content{padding:0;max-width:none;}
   .hero,.block,.stat,.pillar,.checklist,.meta-card,.diagram,.history{background:#fff !important;color:#111 !important;border:1px solid #ddd !important;box-shadow:none !important;}
   .block-body p,.chk span.txt,ul.clean li,.hero h2,.tagline,.narrative{color:#111 !important;}
@@ -283,9 +290,8 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
     <h1>BioSentinela<small>Registro do Projeto de Inovação · FIRST LEGO League</small></h1>
   </div>
   <div class="spacer"></div>
-  <span class="badge" title="Versão do registro">● Versão 1.2 · 04/11/2026</span>
+  <span class="badge" title="Versão do registro">● Versão 1.3 · 04/11/2026</span>
   <button class="btn" id="btnPrint" title="Imprimir / salvar PDF">🖨 Imprimir</button>
-  <button class="btn danger" id="btnReset" title="Apagar todo o progresso salvo neste navegador (duas etapas de confirmação)">↺ Resetar</button>
 </header>
 
 <!-- ============ CONTEÚDO ============ -->
@@ -311,8 +317,6 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
   <div class="meta-grid">
     <div class="meta-card"><label for="m-equipe">Equipe</label><input id="m-equipe" data-meta="equipe" placeholder="Nome da equipe…" autocomplete="off"></div>
     <div class="meta-card"><label for="m-mentor">Mentor / Especialista</label><input id="m-mentor" data-meta="mentor" placeholder="ex.: biólogo, técnico agrícola…" autocomplete="off"></div>
-    <div class="meta-card"><label for="m-tema">Tema da temporada</label><input id="m-tema" data-meta="tema" value="BIOGLOW™ / FIRST CANOPY™" autocomplete="off"></div>
-    <div class="meta-card"><label for="m-evento">Nome do evento</label><input id="m-evento" data-meta="evento" placeholder="ex.: Estadual FLL 2026…" autocomplete="off"></div>
     <div class="meta-card"><label for="m-eventoData">Data do evento</label><input id="m-eventoData" data-meta="eventoData" type="date" aria-describedby="lblCountdown"></div>
   </div>
 
@@ -339,9 +343,16 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
 <section class="block" id="mudancas">
   <div class="block-head">
     <div class="secnum">V</div>
-    <h3>Histórico de Evolução<small>V1 → V1.2</small></h3>
+    <h3>Histórico de Evolução<small>V1 → V1.3</small></h3>
   </div>
   <div class="block-body">
+    <h4 class="sub">V1.3 — 04/11/2026</h4>
+    <ul class="clean">
+      <li><strong>Caixas retráteis</strong> — Histórico, seções 01–12 e Registro de Alterações começam recolhidas e expandem ao clique no cabeçalho (chevron + teclado; estado salvo).</li>
+      <li><strong>Botão “Resetar” removido</strong> — não era necessário; o progresso fica salvo no navegador até limpar o cache.</li>
+      <li><strong>Campos “Tema da temporada” e “Nome do evento” removidos</strong> — informação implícita para a equipe; permanecem Equipe, Mentor/Especialista e Data do evento (alimenta o contador).</li>
+    </ul>
+
     <h4 class="sub">V1.2 — 04/11/2026</h4>
     <ul class="clean">
       <li><strong>Renomeado para BioSentinela</strong> — “Horta Sentinela” aposentado; projeto pronto para publicação em <code>index.html</code> (GitHub Pages).</li>
@@ -801,6 +812,12 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
   </div>
   <div class="block-body">
     <div class="history">
+      <h5>Versão 1.3 — 04/11/2026</h5>
+      <ul>
+        <li>Histórico, seções 01–12 e Registro viram caixas expansíveis (recolhidas por padrão)</li>
+        <li>Botão “Resetar” removido</li>
+        <li>Campos “Tema” e “Nome do evento” removidos</li>
+      </ul>
       <h5>Versão 1.2 — 04/11/2026</h5>
       <ul>
         <li>Renomeado para BioSentinela</li>
@@ -830,7 +847,7 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
 </section>
 
 <footer class="foot">
-  <span>BioSentinela — Corredores Vivos de Biodiversidade Escolar · Registro do Projeto de Inovação · <strong>Versão 1.2</strong> (04/11/2026)</span>
+  <span>BioSentinela — Corredores Vivos de Biodiversidade Escolar · Registro do Projeto de Inovação · <strong>Versão 1.3</strong> (04/11/2026)</span>
   <span>Dados salvos localmente neste navegador · Imprima para PDF se quiser arquivar</span>
 </footer>
 
@@ -861,6 +878,7 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
   state.metrics  = state.metrics  || {};
   state.meta     = state.meta     || {};
   state.decisions= state.decisions|| [];
+  state.open     = state.open     || {};
 
   /* ---------- Migração de status V1 → V1.1 (renumeração de seções) ---------- */
   if (!state.migrated_v11) {
@@ -1041,38 +1059,39 @@ tbody tr:hover{background:rgba(142,224,138,.05);}
   input.addEventListener('keydown', e=>{ if (e.key === 'Enter') addDecision(); });
   renderDecisions();
 
-  /* ---------- Resetar em DUAS ETAPAS ---------- */
-  const btnReset = document.getElementById('btnReset');
-  let armTimer = null;
-  const ARM_MS = 5000;
-
-  function disarmReset(){
-    clearInterval(armTimer);
-    armTimer = null;
-    btnReset.classList.remove('arming');
-    btnReset.style.setProperty('--arm','0%');
-    btnReset.textContent = '↺ Resetar';
+  /* ---------- Seções expansíveis (Histórico, 01–12, Registro) ----------
+     Recolhidas por padrão; clique no cabeçalho expande/recolhe.
+     Clique no botão de status NÃO alterna a seção. Estado salvo localmente. */
+  function toggleBlock(sec, head){
+    sec.classList.toggle('open');
+    const open = sec.classList.contains('open');
+    head.setAttribute('aria-expanded', String(open));
+    state.open[sec.id] = open;
+    save(state);
   }
-  function armReset(){
-    if (armTimer) { // segunda etapa: confirma o reset
-      clearInterval(armTimer);
-      armTimer = null;
-      localStorage.removeItem(LS_KEY);
-      toast('Progresso apagado. Recarregando…');
-      setTimeout(()=>location.reload(), 600);
-      return;
+  document.querySelectorAll('section.block[id]').forEach(sec=>{
+    const head = sec.querySelector('.block-head');
+    const body = sec.querySelector('.block-body');
+    if (!head || !body) return;
+    if (!body.id) body.id = sec.id + '-body';
+    head.setAttribute('role','button');
+    head.setAttribute('tabindex','0');
+    head.setAttribute('aria-expanded','false');
+    head.setAttribute('aria-controls', body.id);
+    head.setAttribute('aria-label', sec.querySelector('h3')?.textContent.trim() || 'Expandir ou recolher seção');
+    if (state.open[sec.id]) {
+      sec.classList.add('open');
+      head.setAttribute('aria-expanded','true');
     }
-    btnReset.classList.add('arming');
-    const start = Date.now();
-    btnReset.textContent = '⚠ Confirmar reset?';
-    armTimer = setInterval(()=>{
-      const elapsed = Date.now() - start;
-      const pct = Math.min(100, (elapsed / ARM_MS) * 100);
-      btnReset.style.setProperty('--arm', pct.toFixed(1) + '%');
-      if (elapsed >= ARM_MS) disarmReset(); // expirou sem confirmar
-    }, 100);
-  }
-  btnReset.addEventListener('click', armReset);
+    head.addEventListener('click', e=>{
+      if (e.target.closest('.status')) return; // botão de status não expande/recolhe
+      toggleBlock(sec, head);
+    });
+    head.addEventListener('keydown', e=>{
+      if (e.target !== head) return;
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleBlock(sec, head); }
+    });
+  });
 
   /* ---------- Imprimir ---------- */
   document.getElementById('btnPrint').addEventListener('click', ()=>window.print());
